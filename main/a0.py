@@ -41,7 +41,11 @@ def within_grid(coord: tuple[int, int], n: int) -> bool:
     TODO Task 1: add at least two doctests here and implement this function
     """
     # TODO: Implement this function
-
+    if coord[0] < 0 or coord[1] < 0:
+        return False
+    if coord[0] >= n or coord[1] >= n:
+        return False
+    return True
 
 @check_contracts
 def all_within_grid(coords: list[tuple[int, int]], n: int) -> bool:
@@ -54,7 +58,10 @@ def all_within_grid(coords: list[tuple[int, int]], n: int) -> bool:
     TODO Task 1: add at least two doctests here and implement this function
     """
     # TODO: Implement this function
-
+    for coord in coords:
+        if not within_grid(coord, n):
+            return False
+    return True
 
 @check_contracts
 def reflect_vertically(coord: tuple[int, int], n: int) -> tuple[int, int]:
@@ -70,7 +77,8 @@ def reflect_vertically(coord: tuple[int, int], n: int) -> tuple[int, int]:
     TODO Task 1: add at least two doctests here and implement this function
     """
     # TODO: Implement this function
-
+    coord_refl = (n - 1 - coord[0], coord[1])
+    return coord_refl
 
 @check_contracts
 def reflect_points(line: list[tuple[int, int]],
@@ -86,7 +94,10 @@ def reflect_points(line: list[tuple[int, int]],
     TODO Task 1: add at least two doctests here and implement this function
     """
     # TODO: Implement this function
-
+    reflected_line = []
+    for coord in line:
+        reflected_line.append(reflect_vertically(coord, n))
+    return reflected_line
 
 @check_contracts
 class Square:
@@ -248,6 +259,21 @@ def _is_diagonal(squares: list[Square], up: bool) -> bool:
     - len(squares) > 3
     """
     # TODO: Implement this function
+    if up:
+        cur_row, cur_col = squares[0].coord
+        for square in squares[1:]:
+            if square.coord[0] - cur_row != 1 or square.coord[1] - cur_col != 1:
+                return False
+            cur_row, cur_col = square.coord
+        return True
+
+    else:
+        cur_row, cur_col = squares[0].coord
+        for square in squares[1:]:
+            if square.coord[0] - cur_row != -1 or square.coord[1] - cur_col != 1:
+                return False
+            cur_row, cur_col = square.coord
+        return True
 
 
 @check_contracts
@@ -372,6 +398,19 @@ class Line:
         X
         """
         # TODO: Implement this method
+        # col_coord = self.cells[0][0]
+        # if self.__len__() == 0:
+        #     Square((0, col_coord), item)
+        #     return 0
+        
+        # else:
+        #     row_coord = self.__len__()
+        #     Square((row_coord, col_coord), item)
+        #     return row_coord
+        for i in range(len(self.cells) - 1, -1, -1):
+            if self.cells[i].symbol is None:
+                self.cells[i].symbol = item
+                return i
 
     def __str__(self) -> str:
         """
@@ -407,6 +446,8 @@ class Line:
         True
         """
         # TODO: Implement this method
+        if self.cells[-1].symbol is not None:
+            return True
 
     def has_fiar(self, coord: tuple[int, int]) -> bool:
         """
@@ -431,6 +472,12 @@ class Line:
         True
         """
         # TODO: Implement this method
+        if is_row(self.cells) or is_column(self.cells) or is_diagonal(self.cells):
+            symbols = [square.symbol for square in self.cells]
+            for i in range(len(symbols) - 3):
+                if symbols[i] == symbols[i + 1] == symbols[i + 2] == symbols[i + 3]:
+                    return True
+        return False
 
 
 ###############################################################################
