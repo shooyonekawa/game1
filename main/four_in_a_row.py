@@ -65,6 +65,14 @@ class FourInARow:
 
     # TODO Task 0: Document the attributes and their types here
 
+    n: int
+    p1_human: bool
+    p2_human: bool
+    p1_to_play: bool
+    result: int
+    board: Grid
+
+
     def __init__(self, n: int, p1_human: bool, p2_human: bool) -> None:
         """
         Initialize this game of four-in-a-row to be played on an n-by-n grid.
@@ -78,6 +86,15 @@ class FourInARow:
         - n > 3
         """
         # TODO Task 0: Implement this method
+        self.n = n
+        if n < 4:
+            raise ValueError("n must be greater than 4")
+        self.board = Grid(n)
+
+        if self.result == IN_PROGRESS:
+            print('Game is in progress')
+        self.p1_human = p1_human
+        self.p2_human = p2_human
 
     def play(self) -> None:
         """
