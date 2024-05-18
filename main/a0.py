@@ -136,6 +136,7 @@ class Square:
         """
         self.symbol = s
         self.coord = coord
+        return None
 
     def __str__(self) -> str:
         """
