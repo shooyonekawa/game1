@@ -530,7 +530,17 @@ def create_rows_and_columns(squares: list[list[Square]]) -> \
     True
     """
     # TODO: Implement this function
+    rows = []
+    for r in range(len(squares)):
+        row = Line(squares[r])
+        rows.append(row)
 
+    columns = []
+    for c in range(len(squares[0])):
+        column = Line([squares[r][c] for r in range(len(squares))])
+        columns.append(column)
+
+    return rows, columns
 
 @check_contracts
 def create_mapping(squares: list[list[Square]]) -> \
@@ -766,6 +776,9 @@ class Grid:
         2
         """
         # TODO: Implement this method
+        if self._columns[col].is_full():
+            return None
+        return self._columns[col].drop(item)
 
     def has_fiar(self, coord: tuple[int, int]) -> bool:
         """
@@ -800,6 +813,9 @@ class Grid:
         True
         """
         # TODO: Implement this method
+        if all([self._columns[i].is_full() for i in range(self.n)]):
+            return True
+        return False
 
 
 if __name__ == '__main__':
