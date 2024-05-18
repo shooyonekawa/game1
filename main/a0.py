@@ -858,7 +858,7 @@ class Grid:
         for line in self._mapping[coord]:
             if line.has_fiar(coord):
                 return True
-        return Falses
+        return False
 
     def is_full(self) -> bool:
         """
