@@ -579,6 +579,28 @@ def create_mapping(squares: list[list[Square]]) -> \
     True
     """
     # TODO: Implement this function
+    mapping = {}
+    rows, columns = create_rows_and_columns(squares)
+    for row in rows:
+        for square in row.cells:
+            if square.coord not in mapping:
+                mapping[square.coord] = [row]
+            else:
+                mapping[square.coord].append(row)
+    for column in columns:
+        for square in column.cells:
+            if square.coord not in mapping:
+                mapping[square.coord] = [column]
+            else:
+                mapping[square.coord].append(column)
+    diagonals = get_coords_of_diagonals(len(squares))
+    for diag in diagonals:
+        for square in diag:
+            if square not in mapping:
+                mapping[square] = [Line(diag)]
+            else:
+                mapping[square].append(Line(diag))
+    return mapping
 
 
 @check_contracts
@@ -600,8 +622,21 @@ def get_down_diagonal_starts(n: int) -> list[tuple[int, int]]:
     [(0, 0)]
     >>> get_down_diagonal_starts(5)
     [(1, 0), (0, 0), (0, 1)]
+    >>> get_down_diagonal_starts(6)
+    [(2, 0), (1, 0), (0, 0), (0, 1), (0, 2)]
+    >>> get_down_diagonal_starts(7)
+    [(3, 0), (2, 0), (1, 0), (0, 0), (0, 1), (0, 2), (0, 3)]
     """
     # TODO: Implement this function
+    diagonal_starts = []
+    for i in range(n - 3):
+        diagonal_starts.append((i, 0))  # left-most starting coordinates
+    for i in range(1, n - 3):
+        diagonal_starts.append((0, i))  # bottom-most starting coordinates
+    # sort the coordinates in the order specified in the docstring
+    diagonal_starts.sort(key=lambda x: (x[0], -x[1]))
+    
+    return diagonal_starts
 
 
 @check_contracts
@@ -621,6 +656,13 @@ def get_down_diagonal(start: tuple[int, int], n: int) -> list[tuple[int, int]]:
     [(0, 0), (1, 1), (2, 2), (3, 3)]
     """
     # TODO: Implement this function
+    diagonal = []
+    r, c = start
+    while within_grid((r, c), n):
+        diagonal.append((r, c))
+        r += 1
+        c += 1
+    return diagonal
 
 
 @check_contracts
@@ -640,6 +682,11 @@ def get_all_down_diagonals(n: int) -> list[list[tuple[int, int]]]:
     [[(0, 0), (1, 1), (2, 2), (3, 3)]]
     """
     # TODO: Implement this function
+    diagonal_starts = get_down_diagonal_starts(n)
+    diagonals = []
+    for start in diagonal_starts:
+        diagonals.append(get_down_diagonal(start, n))
+    return diagonals
 
 
 @check_contracts
@@ -665,6 +712,9 @@ def get_coords_of_diagonals(n: int) -> list[list[tuple[int, int]]]:
     [(3, 0), (2, 1), (1, 2), (0, 3)]
     """
     # TODO: Implement this function
+    down_diagonals = get_all_down_diagonals(n)
+    up_diagonals = [reflect_points(diag, n) for diag in down_diagonals]
+    return down_diagonals + up_diagonals
 
 
 @check_contracts
@@ -688,6 +738,14 @@ def all_diagonals(squares: list[list[Square]]) -> list[Line]:
     (3, 0)
     """
     # TODO: Implement this function
+    diagonals = []
+    coords = get_coords_of_diagonals(len(squares))
+    for coord in coords:
+        diagonal = []
+        for c in coord:
+            diagonal.append(squares[c[0]][c[1])
+        diagonals.append(Line(diagonal))
+    return diagonals
 
 
 @check_contracts
@@ -798,6 +856,10 @@ class Grid:
         True
         """
         # TODO: Implement this method
+        for line in self._mapping[coord]:
+            if line.has_fiar(coord):
+                return True
+        return Falses
 
     def is_full(self) -> bool:
         """
