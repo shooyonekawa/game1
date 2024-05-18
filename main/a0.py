@@ -738,13 +738,11 @@ def all_diagonals(squares: list[list[Square]]) -> list[Line]:
     (3, 0)
     """
     # TODO: Implement this function
-    diagonals = []
     coords = get_coords_of_diagonals(len(squares))
+    diagonals = []
     for coord in coords:
-        diagonal = []
-        for c in coord:
-            diagonal.append(squares[c[0]][c[1])
-        diagonals.append(Line(diagonal))
+        line = Line([squares[r][c] for r, c in coord])
+        diagonals.append(line)
     return diagonals
 
 
